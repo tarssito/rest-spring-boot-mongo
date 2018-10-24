@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tarssito.restmongo.domain.User;
+import com.tarssito.restmongo.dto.UserDTO;
 import com.tarssito.restmongo.repositories.UserRepository;
 import com.tarssito.restmongo.services.exception.ObjectNotFoundException;
 
@@ -19,9 +20,22 @@ public class UserService {
 	public List<User> findAll() {
 		return repository.findAll();
 	}
-	
+
 	public User findById(String id) {
-		Optional<User> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
+		Optional<User> entity = repository.findById(id);
+		return entity.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
+	}
+
+	public User insert(User entity) {
+		return repository.insert(entity);
+	}
+
+	public void delete(String id) {
+		findById(id);
+		repository.deleteById(id);
+	}
+	
+	public User fromDTO(UserDTO entityDTO) {
+		return new User(entityDTO.getId(), entityDTO.getName(), entityDTO.getEmail());
 	}
 }
