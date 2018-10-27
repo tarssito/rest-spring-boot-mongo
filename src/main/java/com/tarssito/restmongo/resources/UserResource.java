@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.tarssito.restmongo.domain.Post;
 import com.tarssito.restmongo.domain.User;
 import com.tarssito.restmongo.dto.UserDTO;
 import com.tarssito.restmongo.services.UserService;
@@ -41,15 +42,11 @@ public class UserResource {
 	public ResponseEntity<Void> insert(@RequestBody UserDTO entityDTO) {
 		User entity = service.fromDTO(entityDTO);
 		entity = service.insert(entity);
-		URI uri = ServletUriComponentsBuilder
-				.fromCurrentRequest()
-				.path("/{id}")
-				.buildAndExpand(entity.getId())
-				.toUri();
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(entity.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 
 	}
-	
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<UserDTO> delete(@PathVariable String id) {
 		service.delete(id);
@@ -63,5 +60,10 @@ public class UserResource {
 		entity = service.update(entity);
 		return ResponseEntity.noContent().build();
 	}
-	
+
+	@RequestMapping(value = "/{id}/posts", method = RequestMethod.GET)
+	public ResponseEntity<List<Post>> findPosts(@PathVariable String id) {
+		User entity = service.findById(id);
+		return ResponseEntity.ok().body(entity.getPosts());
+	}
 }

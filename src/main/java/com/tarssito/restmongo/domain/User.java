@@ -59,10 +59,6 @@ public class User implements Serializable {
 		return posts;
 	}
 
-	public void setPosts(List<Post> posts) {
-		this.posts = posts;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
